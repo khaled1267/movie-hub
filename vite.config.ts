@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      // Development only; deployed requests run through Vercel's /api function.
       '/api': 'http://localhost:3001',
     },
   },
