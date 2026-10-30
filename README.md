@@ -4,7 +4,7 @@ A modern movie discovery application built with React, TypeScript, and Vite. Sea
 
 ## 🚀 Live Demo
 
-[View Live Website](https://movie-dgeqlkxxk-khaledkhan1267-5176s-projects.vercel.app/)
+[View Live Website](https://movie-be25j8muc-khaledkhan1267-5176s-projects.vercel.app/)
 
 ## ✨ Features
 
