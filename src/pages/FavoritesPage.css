@@ -1,0 +1,5 @@
+.favorites-section { width: 100%; align-self: start; margin: 0 auto; }
+.favorites-empty { display: grid; min-height: 20rem; justify-items: center; align-content: center; padding: 2.5rem; border: 1px dashed #383940; border-radius: 1.2rem; background: linear-gradient(145deg, #15161a, #101114); text-align: center; }
+.empty-heart { display: grid; width: 4rem; height: 4rem; place-items: center; border: 1px solid #59212d; border-radius: 50%; background: #28141a; color: #ff526e; font-size: 2.2rem; }
+.favorites-empty h2 { margin: 1.25rem 0 0; color: #f4f4f5; font-size: 1.35rem; letter-spacing: -0.025em; }
+.favorites-empty p { max-width: 26rem; margin: 0.55rem 0 0; color: #a1a1aa; line-height: 1.65; }
