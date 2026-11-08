@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getMovieDetails } from '../services/movieApi'
+import { getMovieDetails, getOptimizedPosterUrl } from '../services/movieApi'
 import type { MovieDetails, MovieSummary } from '../types/movie'
 import './MovieDetailsPage.css'
 
@@ -52,30 +52,36 @@ function MovieDetailsPage({ imdbID, isFavorite, onToggleFavorite, onBack }: Movi
   }
 
   return (
-    <section className="movie-details-page" aria-labelledby="movie-details-title">
+    <section
+      className="movie-details-page"
+      aria-labelledby="movie-details-title"
+    >
       <button className="details-back-button" type="button" onClick={onBack}>← Back</button>
 
       {loading ? (
+        <>
+          <h1 id="movie-details-title" className="visually-hidden" tabIndex={-1}>Loading movie details</h1>
         <div className="details-message" role="status">
           <span className="loading-spinner" aria-hidden="true" />
           <span>Loading movie details…</span>
         </div>
+        </>
       ) : error ? (
         <div className="details-message details-error" role="alert">
-          <h1>Movie details unavailable</h1>
+          <h1 id="movie-details-title" tabIndex={-1}>Movie details unavailable</h1>
           <p>{error}</p>
         </div>
       ) : movie ? (
         <div className="movie-details-layout">
           {movie.Poster && movie.Poster !== 'N/A' ? (
-            <img className="details-poster" src={movie.Poster} alt={`${movie.Title} poster`} />
+            <img className="details-poster" src={getOptimizedPosterUrl(movie.Poster)} alt={`${movie.Title} poster`} width="300" height="450" />
           ) : (
             <div className="details-poster details-poster-placeholder" role="img" aria-label="No poster available">No poster available</div>
           )}
 
           <div className="details-content">
             <p className="eyebrow">MOVIE DETAILS</p>
-            <h1 id="movie-details-title">{movie.Title}</h1>
+            <h1 id="movie-details-title" tabIndex={-1}>{movie.Title}</h1>
             <div className="details-highlights">
               <span>{movie.Year}</span>
               {movie.Runtime !== 'N/A' && <span>{movie.Runtime}</span>}

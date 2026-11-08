@@ -49,7 +49,7 @@ function Header({ onSearch, currentPage, onNavigate }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="header-content">
-        <a className="brand" href="/" aria-label="MovieHub home" onClick={(event) => {
+        <a className="brand" href="/" onClick={(event) => {
           if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
           event.preventDefault()
           navigate('/')
@@ -129,6 +129,7 @@ function Header({ onSearch, currentPage, onNavigate }: HeaderProps) {
             name="query"
             type="search"
             placeholder="Search movies..."
+            aria-required="true"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value)

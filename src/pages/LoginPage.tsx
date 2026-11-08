@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { useAuth } from '../context/AuthContext'
 import type { AppRoute } from '../types/routes'
 import './AuthPage.css'
@@ -12,18 +12,26 @@ function LoginPage({ onNavigate }: LoginPageProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
   const [submitting, setSubmitting] = useState(false)
+  const emailInput = useRef<HTMLInputElement>(null)
+  const passwordInput = useRef<HTMLInputElement>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setError('')
     const normalizedEmail = email.trim()
 
-    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      setError('Enter a valid email address.')
-      return
+    const nextFieldErrors = {
+      email: !normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)
+        ? 'Enter a valid email address.'
+        : undefined,
+      password: !password ? 'Enter your password.' : undefined,
     }
-    if (!password) {
-      setError('Enter your password.')
+    setFieldErrors(nextFieldErrors)
+    if (nextFieldErrors.email || nextFieldErrors.password) {
+      if (nextFieldErrors.email) emailInput.current?.focus()
+      else passwordInput.current?.focus()
       return
     }
 
@@ -43,7 +51,7 @@ function LoginPage({ onNavigate }: LoginPageProps) {
     <section className="auth-page" aria-labelledby="login-title">
       <div className="auth-page-heading">
         <p className="eyebrow">WELCOME BACK</p>
-        <h1 id="login-title">Log in to MovieHub</h1>
+        <h1 id="login-title" tabIndex={-1}>Log in to MovieHub</h1>
         <p>Sign in to continue to your account.</p>
       </div>
       {!firebaseConfigured && (
@@ -56,25 +64,44 @@ function LoginPage({ onNavigate }: LoginPageProps) {
           <label htmlFor="login-email">Email</label>
           <input
             id="login-email"
+            ref={emailInput}
             type="email"
+            required
+            aria-required="true"
             autoComplete="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            aria-invalid={Boolean(error)}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? 'login-email-error' : undefined}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setFieldErrors((current) => ({ ...current, email: undefined }))
+              setError('')
+            }}
           />
+          {fieldErrors.email && <p className="auth-field-error" id="login-email-error">{fieldErrors.email}</p>}
         </div>
         <div className="auth-field">
           <label htmlFor="login-password">Password</label>
           <input
             id="login-password"
+            ref={passwordInput}
             type="password"
+            required
+            aria-required="true"
             autoComplete="current-password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            aria-invalid={Boolean(error)}
+            aria-invalid={Boolean(fieldErrors.password)}
+            aria-describedby={fieldErrors.password ? 'login-password-error' : undefined}
+            onChange={(event) => {
+              setPassword(event.target.value)
+              setFieldErrors((current) => ({ ...current, password: undefined }))
+              setError('')
+            }}
           />
+          {fieldErrors.password && <p className="auth-field-error" id="login-password-error">{fieldErrors.password}</p>}
         </div>
         {error && <p className="auth-error" role="alert">{error}</p>}
+        {submitting && <p className="visually-hidden" role="status">Signing in.</p>}
         <button className="auth-submit" type="submit" disabled={submitting}>
           {submitting ? 'Signing in…' : 'Log In'}
         </button>

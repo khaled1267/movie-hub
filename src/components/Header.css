@@ -24,15 +24,15 @@
 .nav-link-active { font-weight: 750; }
 
 .header-search { position: relative; display: flex; width: min(100%, 26rem); min-width: 12rem; align-items: center; gap: 0.45rem; margin-left: auto; }
-.header-search input { width: 100%; min-width: 0; height: 2.65rem; padding: 0 0.9rem; border: 1px solid #35363d; border-radius: 0.7rem; outline: none; background: #17181c; color: #fff; font-size: 0.875rem; transition: border-color 150ms ease, background-color 150ms ease; }
+.header-search input { width: 100%; min-width: 0; height: 2.65rem; padding: 0 0.9rem; border: 1px solid #696a74; border-radius: 0.7rem; background: #17181c; color: #fff; font-size: 0.875rem; transition: border-color 150ms ease, background-color 150ms ease; }
 .header-search input::placeholder { color: #8b8b94; }
-.header-search input:focus { border-color: #f04a63; background: #1d1e23; box-shadow: 0 0 0 3px rgb(229 9 47 / 16%); }
+.header-search input:focus-visible { border-color: #f04a63; outline: 3px solid #ff526e; outline-offset: 2px; background: #1d1e23; box-shadow: 0 0 0 3px rgb(229 9 47 / 16%); }
 .header-search button, .register-link, .logout-button { display: inline-flex; min-height: 2.55rem; flex: 0 0 auto; align-items: center; justify-content: center; padding: 0 0.95rem; border: 0; border-radius: 0.65rem; background: var(--accent); color: #fff; cursor: pointer; font-size: 0.84rem; font-weight: 750; text-decoration: none; transition: background 150ms ease, transform 150ms ease; }
 .header-search button:hover, .register-link:hover, .logout-button:hover { transform: translateY(-1px); background: var(--accent-hover); }
 .header-account { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: 0.7rem; }
 .account-link, .user-greeting { color: #c4c4cc; font-size: 0.84rem; font-weight: 600; text-decoration: none; }
 .account-link:hover, .account-link[aria-current="page"] { color: #fff; }
-.logout-button { border: 1px solid #3d3d43; background: #1b1c20; }
+.logout-button { border: 1px solid #696a74; background: #1b1c20; }
 .logout-button:hover { background: #292a30; }
 .user-greeting { max-width: 10rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .account-error { position: absolute; top: calc(100% + 0.5rem); right: 0; z-index: 2; width: max-content; max-width: 18rem; padding: 0.55rem 0.7rem; border: 1px solid #7f1d32; border-radius: 0.5rem; background: #241116; color: #ff9aa9; font-size: 0.75rem; }

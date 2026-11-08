@@ -16,7 +16,7 @@ function FavoritesPage({ movies, onToggleFavorite, loading, signedIn, onOpenDeta
       <div className="favorites-heading">
         <div>
           <p className="eyebrow">YOUR COLLECTION</p>
-          <h1 id="favorites-title">Favorites</h1>
+          <h1 id="favorites-title" tabIndex={-1}>Favorites</h1>
         </div>
         {movies.length > 0 && <p className="results-count">{movies.length} saved</p>}
       </div>
@@ -36,6 +36,7 @@ function FavoritesPage({ movies, onToggleFavorite, loading, signedIn, onOpenDeta
         </div>
       ) : (
         <div className="movie-grid">
+          <h2 className="visually-hidden">Saved movies</h2>
           {movies.map((movie) => (
             <MovieCard
               key={movie.imdbID}

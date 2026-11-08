@@ -5,15 +5,8 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-  type User,
-} from 'firebase/auth'
-import { auth, firebaseConfigured } from '../firebase'
+import type { User } from 'firebase/auth'
+import { firebaseConfigured, getFirebaseApp } from '../firebase'
 
 interface AuthContextValue {
   user: User | null
@@ -51,13 +44,14 @@ function getFriendlyError(error: unknown): Error {
   )
 }
 
-function requireConfiguredAuth() {
-  if (!auth) {
+function requireConfiguredApp() {
+  const app = getFirebaseApp()
+  if (!app) {
     throw new Error(
       'Firebase is not configured. Add the VITE_FIREBASE values from .env.example to your .env file.',
     )
   }
-  return auth
+  return app
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -65,24 +59,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(firebaseConfigured)
 
   useEffect(() => {
-    if (!auth) return
+    if (!firebaseConfigured) return
 
-    return onAuthStateChanged(
-      auth,
-      (currentUser) => {
-        setUser(currentUser)
-        setLoading(false)
-      },
-      () => {
+    let active = true
+    let unsubscribe = () => {}
+    const timer = window.setTimeout(() => {
+      void import('firebase/auth').then(({ getAuth, onAuthStateChanged }) => {
+        if (!active) return
+        const auth = getAuth(requireConfiguredApp())
+        const stopListening = onAuthStateChanged(
+          auth,
+          (currentUser) => {
+            if (!active) return
+            setUser(currentUser)
+            setLoading(false)
+          },
+          () => {
+            if (!active) return
+            setUser(null)
+            setLoading(false)
+          },
+        )
+        if (active) unsubscribe = stopListening
+        else stopListening()
+      }).catch(() => {
+        if (!active) return
         setUser(null)
         setLoading(false)
-      },
-    )
+      })
+    }, 300)
+
+    return () => {
+      active = false
+      window.clearTimeout(timer)
+      unsubscribe()
+    }
   }, [])
 
   async function login(email: string, password: string) {
     try {
-      await signInWithEmailAndPassword(requireConfiguredAuth(), email, password)
+      const { getAuth, signInWithEmailAndPassword } = await import('firebase/auth')
+      await signInWithEmailAndPassword(getAuth(requireConfiguredApp()), email, password)
     } catch (error) {
       throw getFriendlyError(error)
     }
@@ -90,8 +107,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function register(name: string, email: string, password: string) {
     try {
+      const { createUserWithEmailAndPassword, getAuth, updateProfile } = await import('firebase/auth')
       const credential = await createUserWithEmailAndPassword(
-        requireConfiguredAuth(),
+        getAuth(requireConfiguredApp()),
         email,
         password,
       )
@@ -103,7 +121,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logout() {
     try {
-      await signOut(requireConfiguredAuth())
+      const { getAuth, signOut } = await import('firebase/auth')
+      await signOut(getAuth(requireConfiguredApp()))
     } catch (error) {
       throw getFriendlyError(error)
     }

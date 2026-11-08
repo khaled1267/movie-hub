@@ -297,3 +297,22 @@ Important: Create an original MovieHub design. Do not copy Netflix branding, log
 - Run npm run build and fix all errors.
 
 After implementation, explain the design changes and list the modified files. Stop and wait for my next instruction.
+
+I have an existing React + TypeScript + Vite Movie App with a Node.js/Express backend in server.mjs.
+
+My frontend is already deployed on Vercel, but movie search and movie details are not working in production.
+
+Please:
+
+1. Inspect the existing project structure and server.mjs.
+2. Migrate the Express backend to Vercel-compatible Serverless Functions.
+3. Preserve all existing API endpoints and functionality, including movie search and movie details using the OMDb API.
+4. Configure vercel.json correctly.
+5. Remove any production dependency on localhost:3001.
+6. Use relative API URLs where appropriate.
+7. Configure OMDB_API_KEY as a Vercel environment variable.
+8. Keep the existing frontend design and functionality unchanged.
+9. Test all API endpoints and fix any deployment issues.
+10. Provide exact Git commands to commit and push the changes.
+
+Do not delete or rewrite working features unnecessarily.
